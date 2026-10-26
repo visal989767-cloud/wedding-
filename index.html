@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wedding Invitation</title>
+<style>
+:root{--bg:#0b0710;--card:#171020;--line:#3a2a4d;--txt:#f6eefc;--mut:#b7a6c9;--led:#ff4fa3;--led2:#ffd36e;--ok:#4be39a;--no:#ff6b6b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#2a1240 0,var(--bg) 60%);color:var(--txt);font-family:Georgia,"Times New Roman",serif;display:flex;justify-content:center}
+.page{display:none;width:100%;max-width:620px;padding:28px 18px 40px;text-align:center}
+.page.on{display:block;animation:in .6s ease}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.welcome.on{display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh}
+.led{font-family:"Courier New",monospace;font-weight:700;letter-spacing:.12em;color:var(--led);text-shadow:0 0 6px var(--led),0 0 18px var(--led),0 0 36px #c2186b;text-transform:uppercase;animation:glow 2.4s infinite alternate}
+.led.gold{color:var(--led2);text-shadow:0 0 6px var(--led2),0 0 18px var(--led2),0 0 36px #b8860b}
+@keyframes glow{0%,90%{opacity:1}93%{opacity:.6}96%{opacity:1}100%{opacity:.85}}
+h1.led{font-size:clamp(28px,8vw,48px);margin:10px 0}
+.sub{color:var(--mut);font-size:18px;margin:6px 0 18px}
+.ticker{width:100%;overflow:hidden;border:2px solid var(--line);border-radius:12px;background:#000;padding:12px 0;margin:22px 0;
+background-image:radial-gradient(#1c1c1c 1.2px,transparent 1.4px);background-size:7px 7px}
+.ticker span{display:inline-block;white-space:nowrap;padding-left:100%;animation:run 16s linear infinite;font-size:clamp(18px,5vw,26px)}
+@keyframes run{to{transform:translateX(-100%)}}
+.btn{font:inherit;font-size:18px;border:0;border-radius:999px;padding:14px 34px;cursor:pointer;background:linear-gradient(135deg,var(--led),#a02fd6);color:#fff;box-shadow:0 0 18px rgba(255,79,163,.5);transition:transform .15s}
+.btn:hover{transform:scale(1.04)}
+.btn.ghost{background:transparent;border:1px solid var(--line);box-shadow:none;color:var(--mut);padding:10px 22px;font-size:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:16px 0;text-align:left}
+label{display:block;color:var(--mut);margin:12px 0 6px;font-size:15px}
+input[type=text]{width:100%;font:inherit;font-size:18px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:#0e0814;color:var(--txt)}
+input[type=text]:focus{outline:2px solid var(--led)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.opt{flex:1;min-width:120px}
+.opt input{display:none}
+.opt span{display:block;text-align:center;padding:12px;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:#0e0814;font-size:17px}
+.opt input:checked+span{border-color:var(--led);box-shadow:0 0 12px rgba(255,79,163,.6);color:var(--led)}
+.opt.yes input:checked+span{border-color:var(--ok);color:var(--ok);box-shadow:0 0 12px rgba(75,227,154,.5)}
+.opt.no input:checked+span{border-color:var(--no);color:var(--no);box-shadow:0 0 12px rgba(255,107,107,.5)}
+.msg{min-height:22px;margin:10px 0 0;color:var(--led2);text-align:center}
+.stats{display:flex;gap:10px;margin:8px 0}
+.stat{flex:1;text-align:center;border:1px solid var(--line);border-radius:12px;padding:10px;background:#0e0814}
+.stat b{display:block;font-size:26px}
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 4px;border-bottom:1px solid var(--line);font-size:18px}
+.list li:last-child{border:0}
+.tag{font-size:14px;padding:4px 12px;border-radius:999px;white-space:nowrap}
+.tag.y{background:rgba(75,227,154,.15);color:var(--ok)}
+.tag.n{background:rgba(255,107,107,.15);color:var(--no)}
+.del{background:none;border:0;color:var(--mut);cursor:pointer;font-size:16px}
+.empty{color:var(--mut);text-align:center;padding:12px}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 : WELCOME -->
+<section class="page welcome on" id="p1">
+  <div class="led gold" style="font-size:16px">♥ Wedding Invitation ♥</div>
+  <h1 class="led">Welcome</h1>
+  <div class="ticker"><span class="led">I want to invite you to join with us &nbsp;♥&nbsp; Come celebrate our wedding day &nbsp;♥&nbsp;</span></div>
+  <p class="sub">Brother Name &amp; Bride Name</p>
+  <p class="sub" style="font-size:16px">Date: 00 / 00 / 2026 &nbsp;·&nbsp; Place: Your Venue</p>
+  <button class="btn" id="next">Next page →</button>
+</section>
+
+<!-- PAGE 2 : RSVP + LIST -->
+<section class="page" id="p2">
+  <h1 class="led" style="font-size:clamp(22px,6vw,34px)">Will you join us?</h1>
+
+  <div class="card">
+    <label>Title</label>
+    <div class="row">
+      <label class="opt"><input type="radio" name="title" value="Mr." checked><span>Mr.</span></label>
+      <label class="opt"><input type="radio" name="title" value="Mrs."><span>Mrs.</span></label>
+    </div>
+    <label for="nm">Full name</label>
+    <input type="text" id="nm" placeholder="Enter your full name" maxlength="60" autocomplete="name">
+    <label>Your answer</label>
+    <div class="row">
+      <label class="opt yes"><input type="radio" name="st" value="join" checked><span>✔ I can join</span></label>
+      <label class="opt no"><input type="radio" name="st" value="cant"><span>✘ I can’t join</span></label>
+    </div>
+    <p class="msg" id="msg"></p>
+    <div style="text-align:center"><button class="btn" id="send">Send</button></div>
+  </div>
+
+  <div class="card">
+    <h2 class="led gold" style="font-size:20px;margin:0 0 10px;text-align:center">Guest list</h2>
+    <div class="stats">
+      <div class="stat"><b id="cy" style="color:var(--ok)">0</b>Can join</div>
+      <div class="stat"><b id="cn" style="color:var(--no)">0</b>Can’t join</div>
+    </div>
+    <ul class="list" id="list"></ul>
+  </div>
+  <button class="btn ghost" id="back">← Back</button>
+</section>
+
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var db=null, guests=[], isOwner=false, local=[];
+
+  function show(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on')});$(id).classList.add('on');window.scrollTo(0,0)}
+  $('next').onclick=function(){show('p2')};
+  $('back').onclick=function(){show('p1')};
+
+  function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+  function render(){
+    var arr=guests.slice().sort(function(a,b){return (a.t||0)-(b.t||0)});
+    var y=arr.filter(function(g){return g.status==='join'}).length;
+    $('cy').textContent=y;$('cn').textContent=arr.length-y;
+    var ul=$('list');ul.innerHTML='';
+    if(!arr.length){ul.innerHTML='<li class="empty" style="justify-content:center">No one yet — be the first!</li>';return}
+    arr.forEach(function(g,i){
+      var li=document.createElement('li');
+      var ok=g.status==='join';
+      li.innerHTML='<span>'+(i+1)+'. '+esc(g.title)+' '+esc(g.name)+'</span><span><span class="tag '+(ok?'y':'n')+'">'+(ok?'Can join':'Can’t join')+'</span>'+(isOwner&&g.id?' <button class="del" title="Delete">🗑</button>':'')+'</span>';
+      var d=li.querySelector('.del');
+      if(d)d.onclick=function(){if(db&&confirm('Remove this name?'))db.collection('guests').doc(g.id).delete().catch(function(){})};
+      ul.appendChild(li);
+    });
+  }
+
+  $('send').onclick=async function(){
+    var name=$('nm').value.trim().replace(/\s+/g,' ');
+    var title=document.querySelector('input[name=title]:checked').value;
+    var st=document.querySelector('input[name=st]:checked').value;
+    var m=$('msg');
+    if(name.length<2){m.textContent='Please enter your full name.';return}
+    var rec={title:title,name:name,status:st,t:Date.now()};
+    if(!db){m.textContent='Saving is not available right now. Please try again later.';return}
+    try{
+      await db.collection('guests').add(rec);
+      m.textContent=(st==='join'?'Thank you ':'Thank you for letting us know ')+title+' '+name+' ♥';
+      $('nm').value='';
+    }catch(e){m.textContent='Could not send. Please ask the host to allow guests to contribute.'}
+  };
+
+  (async function(){
+    try{
+      if(!window.claude||!claude.use)return;
+      var u=await claude.use('user'); isOwner=!!(u&&u.isOwner&&u.isOwner());
+      db=await claude.use('db');
+      if(db){
+        db.collection('guests').onSnapshot(function(s){
+          guests=[];s.forEach?s.forEach(function(d){var o=d.data();o.id=d.id;guests.push(o)}):(s.docs||[]).forEach(function(d){var o=d.data();o.id=d.id;guests.push(o)});
+          render();
+        },function(){});
+      }
+    }catch(e){}
+  })();
+  render();
+})();
+</script>
+</body>
+</html>
