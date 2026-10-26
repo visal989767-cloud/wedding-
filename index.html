@@ -659,7 +659,7 @@
         <label class="opt no"><input type="radio" name="st" value="cant"><span>✘ I can’t join</span></label>
       </div>
       <p class="msg" id="msg"></p>
-      <p class="music-note" id="rsvp-status" role="status" aria-live="polite">Checking guest book connection…</p>
+      <p class="music-note" id="rsvp-status" role="status" aria-live="polite">Loading guest list…</p>
       <div style="text-align:center"><button class="btn" id="send" disabled>Send response</button></div>
     </div>
     <div class="card">
@@ -673,11 +673,13 @@
     <button class="btn ghost" id="back">← Back</button>
   </section>
 
+  <script src="config.js"></script>
   <script>
     (function () {
       var $ = function (i) { return document.getElementById(i) };
       var guests = [], audioContext = null, musicTimer = null, musicStarting = null;
       var guestStorageKey = 'um-pisey-nin-sreynuth-rsvps';
+      var guestApiUrl = String(window.GUEST_API_URL || '').trim();
       function show(id) { document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('on') }); $(id).classList.add('on'); window.scrollTo(0, 0) }
       $('next').onclick = function () { show('p2') };
       $('back').onclick = function () { show('p1') };
@@ -749,6 +751,30 @@
           ul.appendChild(li);
         });
       }
+      async function loadSharedGuests() {
+        var response = await fetch(guestApiUrl, { cache: 'no-store' });
+        if (!response.ok) throw new Error('The shared guest book could not be reached.');
+        var result = await response.json();
+        if (!result || result.success !== true || !Array.isArray(result.guests)) {
+          throw new Error(result && result.error || 'The shared guest book returned invalid data.');
+        }
+        guests = result.guests.filter(function (g) {
+          return g && typeof g.name === 'string' && typeof g.title === 'string' &&
+            (g.status === 'join' || g.status === 'cant') && typeof g.t === 'number';
+        });
+      }
+      async function refreshSharedGuests() {
+        try {
+          await loadSharedGuests();
+          render();
+          $('rsvp-status').textContent = 'Guest list updates automatically for everyone.';
+          return true;
+        } catch (e) {
+          $('rsvp-status').textContent = 'Cannot reach the guest list right now. Please check your connection.';
+          console.error('Unable to refresh shared RSVPs.', e);
+          return false;
+        }
+      }
       $('send').onclick = async function () {
         var name = $('nm').value.trim().replace(/\s+/g, ' ');
         var title = document.querySelector('input[name=title]:checked').value;
@@ -758,25 +784,52 @@
         var rec = { title: title, name: name, status: st, t: Date.now() };
         try {
           $('send').disabled = true;
-          localStorage.setItem(guestStorageKey, JSON.stringify(guests.concat([rec])));
-          guests.push(rec);
-          render();
-          m.textContent = (st === 'join' ? 'Thank you ' : 'Thank you for letting us know ') + title + ' ' + name + ' ♥ Your response is saved on this device.';
+          if (guestApiUrl) {
+            var response = await fetch(guestApiUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(rec)
+            });
+            var result = await response.json();
+            if (!response.ok || !result || result.success !== true) {
+              throw new Error(result && result.error || 'The shared guest book could not save this response.');
+            }
+          } else {
+            localStorage.setItem(guestStorageKey, JSON.stringify(guests.concat([rec])));
+          }
+          if (guestApiUrl) { await refreshSharedGuests() } else { guests.push(rec); render() }
+          m.textContent = (st === 'join' ? 'Thank you ' : 'Thank you for letting us know ') + title + ' ' + name + ' ♥ ' +
+            (guestApiUrl ? 'Your response is saved to the shared guest book.' : 'Your response is saved on this device only.');
           $('nm').value = ''; $('nm').blur();
         } catch (e) {
-          m.textContent = 'Could not save your response in this browser. Check browser storage settings and try again.';
-          console.error('Unable to save RSVP in this browser.', e);
+          m.textContent = guestApiUrl
+            ? 'Could not save your response to the shared guest book. Please check your connection and try again.'
+            : 'Could not save your response in this browser. Check browser storage settings and try again.';
+          console.error('Unable to save RSVP.', e);
         } finally {
-          $('send').disabled = false;
+          $('send').disabled = !guestApiUrl && !localStorageAvailable;
         }
       };
       $('nm').addEventListener('keydown', function (e) { if (e.key === 'Enter' && !$('send').disabled) $('send').click() });
 
-      if (loadGuests()) {
-        $('send').disabled = false;
-        $('rsvp-status').textContent = 'Replies are saved on this device only and are not shared with the couple.';
-      }
       render();
+      var localStorageAvailable = false;
+      if (guestApiUrl) {
+        $('rsvp-status').textContent = 'Loading guest list…';
+        $('send').disabled = false;
+        refreshSharedGuests();
+        window.setInterval(refreshSharedGuests, 15000);
+        document.addEventListener('visibilitychange', function () {
+          if (!document.hidden) refreshSharedGuests();
+        });
+      } else {
+        localStorageAvailable = loadGuests();
+        $('send').disabled = !localStorageAvailable;
+        if (localStorageAvailable) {
+          $('rsvp-status').textContent = 'Not connected yet: replies are saved on this device only. Add the Google Sheets link in config.js to share them.';
+        }
+        render();
+      }
     })();
   </script>
 </body>
