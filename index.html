@@ -3,71 +3,93 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbf5ed">
+<meta name="description" content="Join us to celebrate our wedding day.">
 <title>Wedding Invitation</title>
 <style>
-:root{--bg:#0b0710;--card:#171020;--line:#3a2a4d;--txt:#f6eefc;--mut:#b7a6c9;--led:#ff4fa3;--led2:#ffd36e;--ok:#4be39a;--no:#ff6b6b;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+:root{color-scheme:light;--bg:#fbf7f1;--paper:#fffdf9;--line:#eadbc8;--txt:#392d27;--mut:#806e61;--rose:#a74b58;--gold:#ad8950;--ok:#32795b;--no:#a74b58;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#2a1240 0,var(--bg) 60%);color:var(--txt);font-family:Georgia,"Times New Roman",serif;display:flex;justify-content:center}
-.page{display:none;width:100%;max-width:620px;padding:28px 18px 40px;text-align:center}
-.page.on{display:block;animation:in .6s ease}
-@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-.welcome.on{display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh}
-.led{font-family:"Courier New",monospace;font-weight:700;letter-spacing:.12em;color:var(--led);text-shadow:0 0 6px var(--led),0 0 18px var(--led),0 0 36px #c2186b;text-transform:uppercase;animation:glow 2.4s infinite alternate}
-.led.gold{color:var(--led2);text-shadow:0 0 6px var(--led2),0 0 18px var(--led2),0 0 36px #b8860b}
-@keyframes glow{0%,90%{opacity:1}93%{opacity:.6}96%{opacity:1}100%{opacity:.85}}
-h1.led{font-size:clamp(28px,8vw,48px);margin:10px 0}
-.sub{color:var(--mut);font-size:18px;margin:6px 0 18px}
-.ticker{width:100%;overflow:hidden;border:2px solid var(--line);border-radius:12px;background:#000;padding:12px 0;margin:22px 0;
-background-image:radial-gradient(#1c1c1c 1.2px,transparent 1.4px);background-size:7px 7px}
-.ticker span{display:inline-block;white-space:nowrap;padding-left:100%;animation:run 16s linear infinite;font-size:clamp(18px,5vw,26px)}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0,#fffefa 0,#f8efe4 54%,var(--bg) 100%);color:var(--txt);font-family:Georgia,"Times New Roman",serif;display:flex;justify-content:center}
+.page{display:none;width:100%;max-width:680px;padding:28px 20px 48px;text-align:center}
+.page.on{display:block;animation:in .55s ease}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.welcome.on{display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100svh;padding-top:40px;padding-bottom:40px}
+.frame{position:relative;width:100%;padding:clamp(28px,8vw,58px) clamp(18px,6vw,44px);border:1px solid #d9c5a6;border-radius:240px 240px 24px 24px;background:rgba(255,253,249,.83);box-shadow:0 24px 70px rgba(93,66,43,.12)}
+.frame:before{content:"";position:absolute;inset:9px;border:1px solid rgba(173,137,80,.35);border-radius:inherit;pointer-events:none}
+.eyebrow{color:var(--gold);font-size:12px;letter-spacing:.28em;text-transform:uppercase}
+h1{font-weight:400}
+.names{font-size:clamp(36px,9vw,62px);line-height:1.12;margin:14px 0;color:var(--rose)}
+.amp{font-size:.56em;color:var(--gold);font-style:italic}
+.flourish{color:var(--gold);font-size:24px;letter-spacing:.3em}
+.sub{color:var(--mut);font-size:17px;line-height:1.7;margin:10px 0 20px}
+.details{margin:20px auto 24px;padding:17px 10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--mut);font-size:15px;letter-spacing:.04em}
+.ticker{width:100%;overflow:hidden;margin:12px 0}
+.ticker span{display:inline-block;white-space:nowrap;padding-left:100%;animation:run 24s linear infinite;color:var(--gold);font-style:italic;font-size:15px}
 @keyframes run{to{transform:translateX(-100%)}}
-.btn{font:inherit;font-size:18px;border:0;border-radius:999px;padding:14px 34px;cursor:pointer;background:linear-gradient(135deg,var(--led),#a02fd6);color:#fff;box-shadow:0 0 18px rgba(255,79,163,.5);transition:transform .15s}
-.btn:hover{transform:scale(1.04)}
-.btn.ghost{background:transparent;border:1px solid var(--line);box-shadow:none;color:var(--mut);padding:10px 22px;font-size:15px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:16px 0;text-align:left}
-label{display:block;color:var(--mut);margin:12px 0 6px;font-size:15px}
-input[type=text]{width:100%;font:inherit;font-size:18px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:#0e0814;color:var(--txt)}
-input[type=text]:focus{outline:2px solid var(--led)}
+.actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:22px}
+.btn{font:inherit;font-size:16px;border:1px solid var(--rose);border-radius:999px;padding:13px 25px;cursor:pointer;background:var(--rose);color:#fffdf9;box-shadow:0 8px 22px rgba(167,75,88,.18);transition:transform .18s,background .18s}
+.btn:hover{transform:translateY(-2px);background:#893c49}
+.btn:disabled{cursor:not-allowed;opacity:.55;transform:none}
+.btn:focus-visible,input:focus-visible{outline:3px solid #d4a65b;outline-offset:3px}
+.btn.ghost{background:transparent;border-color:var(--line);box-shadow:none;color:var(--rose);padding:11px 21px;font-size:14px}
+.music-note{font-size:12px;color:var(--mut);margin:9px 0 0}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:22px;margin:17px 0;text-align:left;box-shadow:0 12px 32px rgba(93,66,43,.06)}
+.card h2{color:var(--rose);font-size:26px;font-weight:400;text-align:center;margin:0 0 6px}
+.card-intro{text-align:center;color:var(--mut);margin:0 0 18px}
+label{display:block;color:var(--mut);margin:14px 0 7px;font-size:14px}
+input[type=text]{width:100%;font:inherit;font-size:17px;padding:13px 14px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--txt)}
+input[type=text]:focus{border-color:var(--gold)}
 .row{display:flex;gap:10px;flex-wrap:wrap}
-.opt{flex:1;min-width:120px}
-.opt input{display:none}
-.opt span{display:block;text-align:center;padding:12px;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:#0e0814;font-size:17px}
-.opt input:checked+span{border-color:var(--led);box-shadow:0 0 12px rgba(255,79,163,.6);color:var(--led)}
-.opt.yes input:checked+span{border-color:var(--ok);color:var(--ok);box-shadow:0 0 12px rgba(75,227,154,.5)}
-.opt.no input:checked+span{border-color:var(--no);color:var(--no);box-shadow:0 0 12px rgba(255,107,107,.5)}
-.msg{min-height:22px;margin:10px 0 0;color:var(--led2);text-align:center}
-.stats{display:flex;gap:10px;margin:8px 0}
-.stat{flex:1;text-align:center;border:1px solid var(--line);border-radius:12px;padding:10px;background:#0e0814}
-.stat b{display:block;font-size:26px}
+.opt{flex:1;min-width:120px;margin:0}
+.opt input{position:absolute;opacity:0;width:1px;height:1px}
+.opt span{display:block;text-align:center;padding:12px;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:#fff;font-size:16px;transition:border-color .15s,background .15s}
+.opt input:focus-visible+span{outline:3px solid #d4a65b;outline-offset:2px}
+.opt input:checked+span{border-color:var(--rose);background:#fbf0ef;color:var(--rose)}
+.opt.yes input:checked+span{border-color:var(--ok);background:#eef7f1;color:var(--ok)}
+.opt.no input:checked+span{border-color:var(--no);background:#fbf0ef;color:var(--no)}
+.msg{min-height:22px;margin:10px 0 0;color:var(--rose);text-align:center;line-height:1.5}
+.stats{display:flex;gap:10px;margin:16px 0}
+.stat{flex:1;text-align:center;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;color:var(--mut);font-size:13px}
+.stat b{display:block;font-size:26px;margin-bottom:3px}
 .list{list-style:none;margin:0;padding:0}
-.list li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 4px;border-bottom:1px solid var(--line);font-size:18px}
+.list li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 4px;border-bottom:1px solid var(--line);font-size:16px}
 .list li:last-child{border:0}
-.tag{font-size:14px;padding:4px 12px;border-radius:999px;white-space:nowrap}
-.tag.y{background:rgba(75,227,154,.15);color:var(--ok)}
-.tag.n{background:rgba(255,107,107,.15);color:var(--no)}
+.tag{font-size:12px;padding:5px 10px;border-radius:999px;white-space:nowrap}
+.tag.y{background:#eef7f1;color:var(--ok)}
+.tag.n{background:#fbf0ef;color:var(--no)}
 .del{background:none;border:0;color:var(--mut);cursor:pointer;font-size:16px}
 .empty{color:var(--mut);text-align:center;padding:12px}
+@media(max-width:420px){.page{padding-left:14px;padding-right:14px}.frame{border-radius:180px 180px 20px 20px}.list li{align-items:flex-start;font-size:14px}.tag{font-size:11px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
 
 <!-- PAGE 1 : WELCOME -->
 <section class="page welcome on" id="p1">
-  <div class="led gold" style="font-size:16px">♥ Wedding Invitation ♥</div>
-  <h1 class="led">Welcome</h1>
-  <div class="ticker"><span class="led">I want to invite you to join with us &nbsp;♥&nbsp; Come celebrate our wedding day &nbsp;♥&nbsp;</span></div>
-  <p class="sub">Brother Name &amp; Bride Name</p>
-  <p class="sub" style="font-size:16px">Date: 00 / 00 / 2026 &nbsp;·&nbsp; Place: Your Venue</p>
-  <button class="btn" id="next">Next page →</button>
+  <div class="frame">
+    <div class="eyebrow">Together with our families</div>
+    <div class="flourish" aria-hidden="true">❧ ♥ ❧</div>
+    <p class="eyebrow">joyfully invite you to celebrate</p>
+    <h1 class="names">Brother Name<br><span class="amp">&amp;</span><br>Bride Name</h1>
+    <div class="ticker" aria-label="We invite you to celebrate our wedding"><span>With love and joy, please join us as we begin our forever ♥</span></div>
+    <p class="details">00 / 00 / 2026 &nbsp;·&nbsp; Your Venue</p>
+    <div class="actions">
+      <button class="btn" id="next">Kindly respond <span aria-hidden="true">→</span></button>
+      <button class="btn ghost" id="music" type="button" aria-pressed="false">♫ Play instrumental</button>
+    </div>
+    <p class="music-note" id="music-note">Optional music · tap to play</p>
+  </div>
 </section>
 
 <!-- PAGE 2 : RSVP + LIST -->
 <section class="page" id="p2">
-  <h1 class="led" style="font-size:clamp(22px,6vw,34px)">Will you join us?</h1>
+  <h1 class="names" style="font-size:clamp(32px,8vw,44px)">Will you join us?</h1>
 
   <div class="card">
+    <h2>Kindly reply</h2>
+    <p class="card-intro">We would be delighted to celebrate with you.</p>
     <label>Title</label>
     <div class="row">
       <label class="opt"><input type="radio" name="title" value="Mr." checked><span>Mr.</span></label>
@@ -81,11 +103,12 @@ input[type=text]:focus{outline:2px solid var(--led)}
       <label class="opt no"><input type="radio" name="st" value="cant"><span>✘ I can’t join</span></label>
     </div>
     <p class="msg" id="msg"></p>
-    <div style="text-align:center"><button class="btn" id="send">Send</button></div>
+    <p class="music-note" id="rsvp-status" role="status" aria-live="polite">Checking guest book connection…</p>
+    <div style="text-align:center"><button class="btn" id="send" disabled>Send response</button></div>
   </div>
 
   <div class="card">
-    <h2 class="led gold" style="font-size:20px;margin:0 0 10px;text-align:center">Guest list</h2>
+    <h2>Guest list</h2>
     <div class="stats">
       <div class="stat"><b id="cy" style="color:var(--ok)">0</b>Can join</div>
       <div class="stat"><b id="cn" style="color:var(--no)">0</b>Can’t join</div>
@@ -98,11 +121,73 @@ input[type=text]:focus{outline:2px solid var(--led)}
 <script>
 (function(){
   var $=function(i){return document.getElementById(i)};
-  var db=null, guests=[], isOwner=false, local=[];
+  var db=null, guests=[], isOwner=false, audioContext=null, musicTimer=null;
 
   function show(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on')});$(id).classList.add('on');window.scrollTo(0,0)}
   $('next').onclick=function(){show('p2')};
   $('back').onclick=function(){show('p1')};
+
+  function playTone(frequency,start,duration,volume,type){
+    var oscillator=audioContext.createOscillator();
+    var gain=audioContext.createGain();
+    oscillator.type=type;
+    oscillator.frequency.value=frequency;
+    gain.gain.setValueAtTime(0.001,start);
+    gain.gain.linearRampToValueAtTime(volume,start+0.04);
+    gain.gain.setValueAtTime(volume,start+duration*0.65);
+    gain.gain.exponentialRampToValueAtTime(0.001,start+duration);
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.start(start);
+    oscillator.stop(start+duration+0.02);
+  }
+
+  function playPhrase(){
+    var phrase=[
+      [523.25,.55],[659.25,.55],[783.99,1.1],[698.46,.55],
+      [659.25,.55],[587.33,1.1],[659.25,.55],[783.99,.55],
+      [880,1.1],[783.99,.55],[698.46,.55],[659.25,1.1]
+    ];
+    var start=audioContext.currentTime+0.05;
+    var position=0;
+    phrase.forEach(function(note,index){
+      playTone(note[0],start+position,note[1],0.09,'sine');
+      if(index%3===0){
+        playTone(261.63,start+position,2.1,0.025,'triangle');
+        playTone(329.63,start+position,2.1,0.018,'sine');
+        playTone(392,start+position,2.1,0.018,'sine');
+      }
+      position+=note[1];
+    });
+  }
+
+  $('music').onclick=async function(){
+    var button=$('music');
+    try{
+      if(!audioContext){
+        var AudioContextClass=window.AudioContext||window.webkitAudioContext;
+        if(!AudioContextClass)throw new Error('Audio playback is not supported by this browser.');
+        audioContext=new AudioContextClass();
+      }
+      if(musicTimer){
+        window.clearInterval(musicTimer);
+        musicTimer=null;
+        await audioContext.suspend();
+        button.textContent='♫ Play instrumental';
+        button.setAttribute('aria-pressed','false');
+        $('music-note').textContent='Music paused · tap to play';
+        return;
+      }
+      await audioContext.resume();
+      playPhrase();
+      musicTimer=window.setInterval(playPhrase,8800);
+      button.textContent='Ⅱ Pause music';
+      button.setAttribute('aria-pressed','true');
+      $('music-note').textContent='A gentle instrumental, played just for you';
+    }catch(e){
+      $('music-note').textContent=e.message||'Music could not be started in this browser.';
+    }
+  };
 
   function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
 
@@ -117,7 +202,7 @@ input[type=text]:focus{outline:2px solid var(--led)}
       var ok=g.status==='join';
       li.innerHTML='<span>'+(i+1)+'. '+esc(g.title)+' '+esc(g.name)+'</span><span><span class="tag '+(ok?'y':'n')+'">'+(ok?'Can join':'Can’t join')+'</span>'+(isOwner&&g.id?' <button class="del" title="Delete">🗑</button>':'')+'</span>';
       var d=li.querySelector('.del');
-      if(d)d.onclick=function(){if(db&&confirm('Remove this name?'))db.collection('guests').doc(g.id).delete().catch(function(){})};
+      if(d)d.onclick=function(){if(db&&confirm('Remove this name?'))db.collection('guests').doc(g.id).delete().catch(function(){ $('msg').textContent='Could not remove this response. Please try again.'; })};
       ul.appendChild(li);
     });
   }
@@ -129,26 +214,42 @@ input[type=text]:focus{outline:2px solid var(--led)}
     var m=$('msg');
     if(name.length<2){m.textContent='Please enter your full name.';return}
     var rec={title:title,name:name,status:st,t:Date.now()};
-    if(!db){m.textContent='Saving is not available right now. Please try again later.';return}
+    if(!db){m.textContent='Online RSVPs are not connected yet. Please contact the couple to reply.';return}
     try{
       await db.collection('guests').add(rec);
       m.textContent=(st==='join'?'Thank you ':'Thank you for letting us know ')+title+' '+name+' ♥';
       $('nm').value='';
-    }catch(e){m.textContent='Could not send. Please ask the host to allow guests to contribute.'}
+    }catch(e){m.textContent='Could not send your RSVP. Please try again or contact the couple.'}
   };
 
   (async function(){
     try{
-      if(!window.claude||!claude.use)return;
+      if(!window.claude||!claude.use){
+        $('rsvp-status').textContent='Online RSVPs are not connected yet. Please contact the couple to reply.';
+        $('send').disabled=true;
+        return;
+      }
       var u=await claude.use('user'); isOwner=!!(u&&u.isOwner&&u.isOwner());
       db=await claude.use('db');
-      if(db){
-        db.collection('guests').onSnapshot(function(s){
-          guests=[];s.forEach?s.forEach(function(d){var o=d.data();o.id=d.id;guests.push(o)}):(s.docs||[]).forEach(function(d){var o=d.data();o.id=d.id;guests.push(o)});
-          render();
-        },function(){});
+      if(!db){
+        $('rsvp-status').textContent='Online RSVPs are not connected yet. Please contact the couple to reply.';
+        $('send').disabled=true;
+        return;
       }
-    }catch(e){}
+      db.collection('guests').onSnapshot(function(s){
+        guests=[];s.forEach?s.forEach(function(d){var o=d.data();o.id=d.id;guests.push(o)}):(s.docs||[]).forEach(function(d){var o=d.data();o.id=d.id;guests.push(o)});
+        $('send').disabled=false;
+        $('rsvp-status').textContent='Guest book connected. Please send your RSVP.';
+        render();
+      },function(){
+        $('send').disabled=true;
+        $('rsvp-status').textContent='Could not connect to the guest book. Please contact the couple to reply.';
+      });
+    }catch(e){
+      $('send').disabled=true;
+      $('rsvp-status').textContent='Online RSVPs are not connected yet. Please contact the couple to reply.';
+      console.error('Unable to connect to the RSVP guest book.',e);
+    }
   })();
   render();
 })();
