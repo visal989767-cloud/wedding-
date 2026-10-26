@@ -121,7 +121,7 @@ input[type=text]:focus{border-color:var(--gold)}
 <script>
 (function(){
   var $=function(i){return document.getElementById(i)};
-  var db=null, guests=[], isOwner=false, audioContext=null, musicTimer=null;
+  var db=null, guests=[], isOwner=false, audioContext=null, musicTimer=null, musicStarting=null;
 
   function show(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on')});$(id).classList.add('on');window.scrollTo(0,0)}
   $('next').onclick=function(){show('p2')};
@@ -161,33 +161,60 @@ input[type=text]:focus{border-color:var(--gold)}
     });
   }
 
-  $('music').onclick=async function(){
-    var button=$('music');
-    try{
+  function startMusic(){
+    if(musicTimer)return Promise.resolve();
+    if(musicStarting)return musicStarting;
+    musicStarting=(async function(){
       if(!audioContext){
         var AudioContextClass=window.AudioContext||window.webkitAudioContext;
         if(!AudioContextClass)throw new Error('Audio playback is not supported by this browser.');
         audioContext=new AudioContextClass();
       }
+      await audioContext.resume();
+      if(audioContext.state!=='running')throw new Error('Your browser needs a tap before it can play music.');
+      playPhrase();
+      musicTimer=window.setInterval(playPhrase,8800);
+      $('music').textContent='Ⅱ Pause music';
+      $('music').setAttribute('aria-pressed','true');
+      $('music-note').textContent='A gentle instrumental, played just for you';
+      document.removeEventListener('pointerdown',retryMusicAfterGesture);
+      document.removeEventListener('keydown',retryMusicAfterGesture);
+    })();
+    return musicStarting.then(function(){
+      musicStarting=null;
+    },function(e){
+      musicStarting=null;
+      throw e;
+    });
+  }
+
+  function retryMusicAfterGesture(){
+    startMusic().catch(function(){
+      $('music-note').textContent='Tap “Play instrumental” to start the music.';
+    });
+  }
+
+  document.addEventListener('pointerdown',retryMusicAfterGesture);
+  document.addEventListener('keydown',retryMusicAfterGesture);
+  $('music').onclick=async function(){
+    try{
       if(musicTimer){
         window.clearInterval(musicTimer);
         musicTimer=null;
         await audioContext.suspend();
-        button.textContent='♫ Play instrumental';
-        button.setAttribute('aria-pressed','false');
+        $('music').textContent='♫ Play instrumental';
+        $('music').setAttribute('aria-pressed','false');
         $('music-note').textContent='Music paused · tap to play';
         return;
       }
-      await audioContext.resume();
-      playPhrase();
-      musicTimer=window.setInterval(playPhrase,8800);
-      button.textContent='Ⅱ Pause music';
-      button.setAttribute('aria-pressed','true');
-      $('music-note').textContent='A gentle instrumental, played just for you';
+      await startMusic();
     }catch(e){
       $('music-note').textContent=e.message||'Music could not be started in this browser.';
     }
   };
+  startMusic().catch(function(){
+    $('music-note').textContent='Your browser may block autoplay. Tap anywhere to start the music.';
+  });
 
   function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
 
