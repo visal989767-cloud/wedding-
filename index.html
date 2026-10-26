@@ -676,7 +676,8 @@
   <script>
     (function () {
       var $ = function (i) { return document.getElementById(i) };
-      var db = null, guests = [], isOwner = false, audioContext = null, musicTimer = null, musicStarting = null;
+      var guests = [], audioContext = null, musicTimer = null, musicStarting = null;
+      var guestStorageKey = 'um-pisey-nin-sreynuth-rsvps';
       function show(id) { document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('on') }); $(id).classList.add('on'); window.scrollTo(0, 0) }
       $('next').onclick = function () { show('p2') };
       $('back').onclick = function () { show('p1') };
@@ -720,6 +721,22 @@
       startMusic().catch(function () { $('music-note').textContent = 'Your browser may block autoplay. Tap anywhere to start the music.' });
 
       function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML }
+      function loadGuests() {
+        try {
+          var saved = JSON.parse(localStorage.getItem(guestStorageKey) || '[]');
+          if (!Array.isArray(saved)) throw new Error('Saved responses are not in the expected format.');
+          guests = saved.filter(function (g) {
+            return g && typeof g.name === 'string' && typeof g.title === 'string' &&
+              (g.status === 'join' || g.status === 'cant') && typeof g.t === 'number';
+          });
+          return true;
+        } catch (e) {
+          $('rsvp-status').textContent = 'This browser cannot access saved RSVPs. Please check browser storage settings.';
+          $('send').disabled = true;
+          console.error('Unable to load RSVPs from this browser.', e);
+          return false;
+        }
+      }
       function render() {
         var arr = guests.slice().sort(function (a, b) { return (a.t || 0) - (b.t || 0) });
         var y = arr.filter(function (g) { return g.status === 'join' }).length;
@@ -728,9 +745,7 @@
         if (!arr.length) { ul.innerHTML = '<li class="empty" style="justify-content:center">No one yet — be the first!</li>'; return }
         arr.forEach(function (g, i) {
           var li = document.createElement('li'), ok = g.status === 'join';
-          li.innerHTML = '<span>' + (i + 1) + '. ' + esc(g.title) + ' ' + esc(g.name) + '</span><span><span class="tag ' + (ok ? 'y' : 'n') + '">' + (ok ? 'Can join' : 'Can’t join') + '</span>' + (isOwner && g.id ? ' <button class="del" title="Delete" aria-label="Delete">🗑</button>' : '') + '</span>';
-          var d = li.querySelector('.del');
-          if (d) d.onclick = function () { if (db && confirm('Remove this name?')) db.collection('guests').doc(g.id).delete().catch(function () { $('msg').textContent = 'Could not remove this response. Please try again.' }) };
+          li.innerHTML = '<span>' + (i + 1) + '. ' + esc(g.title) + ' ' + esc(g.name) + '</span><span><span class="tag ' + (ok ? 'y' : 'n') + '">' + (ok ? 'Can join' : 'Can’t join') + '</span></span>';
           ul.appendChild(li);
         });
       }
@@ -741,34 +756,26 @@
         var m = $('msg');
         if (name.length < 2) { m.textContent = 'Please enter your full name.'; return }
         var rec = { title: title, name: name, status: st, t: Date.now() };
-        if (!db) { m.textContent = 'Online RSVPs are not connected yet. Please contact the couple to reply.'; return }
         try {
-          await db.collection('guests').add(rec);
-          m.textContent = (st === 'join' ? 'Thank you ' : 'Thank you for letting us know ') + title + ' ' + name + ' ♥';
+          $('send').disabled = true;
+          localStorage.setItem(guestStorageKey, JSON.stringify(guests.concat([rec])));
+          guests.push(rec);
+          render();
+          m.textContent = (st === 'join' ? 'Thank you ' : 'Thank you for letting us know ') + title + ' ' + name + ' ♥ Your response is saved on this device.';
           $('nm').value = ''; $('nm').blur();
-        } catch (e) { m.textContent = 'Could not send your RSVP. Please try again or contact the couple.' }
+        } catch (e) {
+          m.textContent = 'Could not save your response in this browser. Check browser storage settings and try again.';
+          console.error('Unable to save RSVP in this browser.', e);
+        } finally {
+          $('send').disabled = false;
+        }
       };
       $('nm').addEventListener('keydown', function (e) { if (e.key === 'Enter' && !$('send').disabled) $('send').click() });
 
-      (async function () {
-        try {
-          if (!window.claude || !claude.use) { $('rsvp-status').textContent = 'Online RSVPs are not connected yet. Please contact the couple to reply.'; $('send').disabled = true; return }
-          var u = await claude.use('user'); isOwner = !!(u && u.isOwner && u.isOwner());
-          db = await claude.use('db');
-          if (!db) { $('rsvp-status').textContent = 'Online RSVPs are not connected yet. Please contact the couple to reply.'; $('send').disabled = true; return }
-          db.collection('guests').onSnapshot(function (s) {
-            guests = [];
-            (s.forEach ? function (f) { s.forEach(f) } : function (f) { (s.docs || []).forEach(f) })(function (d) { var o = d.data(); o.id = d.id; guests.push(o) });
-            $('send').disabled = false;
-            $('rsvp-status').textContent = 'Guest book connected. Please send your RSVP.';
-            render();
-          }, function () { $('send').disabled = true; $('rsvp-status').textContent = 'Could not connect to the guest book. Please contact the couple to reply.' });
-        } catch (e) {
-          $('send').disabled = true;
-          $('rsvp-status').textContent = 'Online RSVPs are not connected yet. Please contact the couple to reply.';
-          console.error('Unable to connect to the RSVP guest book.', e);
-        }
-      })();
+      if (loadGuests()) {
+        $('send').disabled = false;
+        $('rsvp-status').textContent = 'Replies are saved on this device only and are not shared with the couple.';
+      }
       render();
     })();
   </script>
